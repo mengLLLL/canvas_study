@@ -5,9 +5,10 @@
     <title>^_^</title>
 </head>
 <body>
-<canvas id="canvas" width="400" height="400" style="border: 1px solid #aaff88; margin: 40px auto;"></canvas>
+<canvas id="canvas" width="400" height="400" style="border: 1px solid #aaff88; "></canvas>
 </body>
 <script src="./utils.js"></script>
+<script src="./arrow.js"></script>
 <script>
     window.onload = function () {
         var canvas = document.getElementById('canvas');
@@ -15,6 +16,21 @@
         canvas.addEventListener("mousedown", function () {
             console.log("x:" + mouse.x + ",y:"+ mouse.y)
         },false)
+        var cxt = canvas.getContext("2d")
+
+        //跟随鼠标转动的箭头
+        var arrow = new Arrow();
+        arrow.x = canvas.width/2;
+        arrow.y = canvas.height/2;
+        (function drawFrame(){
+            window.requestAnimationFrame(drawFrame,canvas);
+            cxt.clearRect(0,0,canvas.width, canvas.height);
+            var dx = mouse.x - arrow.x;
+            var dy = mouse.y - arrow.y;
+            arrow.rotation = Math.atan2(dy,dx);
+            arrow.draw(cxt)
+        }())
+
     }
 </script>
 </html>
