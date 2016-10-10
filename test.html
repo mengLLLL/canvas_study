@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>^_^</title>
+</head>
+<body>
+<canvas id="canvas" width="400" height="400" style="border: 1px solid #aaff88; margin: 40px auto;"></canvas>
+</body>
+<script src="./utils.js"></script>
+<script>
+    window.onload = function () {
+        var canvas = document.getElementById('canvas');
+        var mouse = untils.captureMouse(canvas);
+        canvas.addEventListener("mousedown", function () {
+            console.log("x:" + mouse.x + ",y:"+ mouse.y)
+        },false)
+    }
+</script>
+</html>
