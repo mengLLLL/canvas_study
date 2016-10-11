@@ -12,7 +12,9 @@ function Arrow(){
 
 Arrow.prototype.draw = function (cxt) {
   cxt.save();
+  //移动x,y的位置
   cxt.translate(this.x, this.y);
+  //rotate接受的参数是一个弧度值
   cxt.rotate(this.rotation);
   cxt.lineWidth = 2;
   cxt.fillStyle = this.color;
