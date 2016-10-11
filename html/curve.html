@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<canvas id="canvas" width="800" height="800" style="border: 1px solid #aaff88; "></canvas>
+</body>
+<script src="../js/utils.js"></script>
+<script>
+    window.onload = function () {
+        var canvas = document.getElementById("canvas");
+        var context = canvas.getContext("2d");
+        var mouse = untils.captureMouse(canvas),
+                x0 = 100,
+                y0 = 200,
+                x2 = 300,
+                y2 = 200;
+        canvas.addEventListener('mouseover', function () {
+            context.clearRect(0,0, canvas.width, canvas.height);
+            var x1 = mouse.x;
+            var y1 = mouse.y;
+            context.beginPath();
+            context.moveTo(x0,y0);
+            context.quadraticCurveTo(x1, y1, x2, y2);
+            context.stroke();
+        },false)
+    }
+    /*
+    上面画的曲线永远都不会触碰到控制点,而会在中途偏离控制点.
+    如果希望曲线能够穿过控制点,可以使用下面的公式计算控制点.
+    以(x0,y0)作为起始点,(x2,y2)作为终点,(x1,y1)作为控制点,希望曲线穿过的点为(xt,yt),那么(x1,y1)应该由下面的公式计算出
+        x1 = xt * 2 - (x0 + x2)/2;
+        y1 = yt * 2 - (y0 + y2)/2;
+     */
+</script>
+</html>

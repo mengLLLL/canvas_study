@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>使用两个角造成视觉上随机飞来飞去的效果</title>
+</head>
+<body>
+<canvas id="canvas" width="800" height="800" style="border: 1px solid #aaff88; "></canvas>
+
+</body>
+<script src="../js/ball.js"></script>
+<script>
+    window.onload = function () {
+        var canvas = document.getElementById("canvas");
+        var context = canvas.getContext("2d");
+
+        var ball = new Ball(),
+                angleX = 0,
+                angleY = 0,
+                range = 50,
+                centerX = canvas.width/2,
+                centerY = canvas.height/2,
+                xspeed = 0.07,
+                yspeed = 0.11;
+
+        (function drawFrame(){
+            window.requestAnimationFrame(drawFrame);
+            //清空画布
+            context.clearRect(0,0, canvas.width, canvas.height);
+            //重新设置属性
+            ball.x = centerX + Math.sin(angleX)*range;
+            ball.y = centerY + Math.sin(angleY)*range;
+            angleX += xspeed;
+            angleY += yspeed;
+            //绘图
+            ball.draw(context)
+        }());
+    }
+</script>
+</html>

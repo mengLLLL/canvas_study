@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>foutain</title>
+</head>
+<body>
+<canvas id="canvas" width="800" height="800" style="border: 1px solid #aaff88; ">
+    喷泉思路:
+        1.只有一点注意事项,y轴向下才是正数!所以一开始vy是个负数,代表要向上运动
+</canvas>
+
+</body>
+<script src="../js/ball.js"></script>
+<script>
+    window.onload = function () {
+        var canvas = document.getElementById("canvas");
+        var context = canvas.getContext("2d");
+
+        var balls = [];
+        var numBalls = 1;
+        var gravity = 0.5;
+        for(var ball,i = 0; i<numBalls; i++){
+            ball = new Ball(2, Math.random()*0xffffff);
+            ball.x = canvas.width/2;
+            ball.y = canvas.height;
+            ball.vx = Math.random()*2 -1;
+            ball.vy = Math.random()* -10 -10;
+            balls.push(ball)
+        }
+        function draw(ball){
+            ball.vy +=gravity;
+            ball.x += ball.vx;
+            ball.y += ball.vy;
+            if(ball.x - ball.radius > canvas.width ||
+               ball.x + ball.radius < 0 ||
+               ball.y - ball.radius > canvas.height ||
+               ball.y + ball.radius <0){
+                ball.x = canvas.width/2;
+                ball.y = canvas.height;
+                ball.vx = Math.random()*2 -1;
+                ball.vy = Math.random()* -10 - 10;
+            }
+            ball.draw(context)
+        }
+
+
+        (function drawFrame(){
+            window.requestAnimationFrame(drawFrame);
+            //清空画布
+            context.clearRect(0,0, canvas.width, canvas.height);
+           balls.forEach(draw)
+        }());
+    }
+</script>
+</html>

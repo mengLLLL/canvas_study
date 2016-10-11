@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>方向键来控制小球的运动</title>
+</head>
+<body>
+<canvas id="canvas" width="800" height="800" style="border: 1px solid #aaff88; ">
+    通过方向键来控制小球的加速减速
+</canvas>
+
+</body>
+<script src="../js/ball.js"></script>
+<script>
+    window.onload = function () {
+        var canvas = document.getElementById("canvas");
+        var context = canvas.getContext("2d");
+
+        var ball = new Ball();
+        var vx = 0;
+        var vy = 0;
+        var ax = 0;//加速度
+        var ay = 0;
+
+        ball.x = canvas.width/2;
+        ball.y = canvas.height/2;
+
+        window.addEventListener('keydown', function (e) {
+            switch(e.keyCode){
+                case 37:
+                    ax = -0.1;
+                    break;
+                case 39:
+                    ax = 0.1;
+                    break;
+                case 38:
+                    ay = -0.1;
+                    break;
+                case 40:
+                    ay = 0.1;
+                    break;
+            }
+        },false);
+
+        window.addEventListener('keyup', function () {
+            ax = 0;
+            ay = 0;
+        },false);
+
+        (function drawFrame(){
+            window.requestAnimationFrame(drawFrame);
+            //清空画布
+            context.clearRect(0,0, canvas.width, canvas.height);
+            //重新设置属性
+            vx += ax;
+            vy += ay;
+            ball.x += vx;
+            ball.y += vy;
+            //绘图
+            ball.draw(context)
+        }());
+    }
+</script>
+
+</html>

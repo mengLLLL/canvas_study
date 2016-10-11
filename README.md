@@ -43,14 +43,18 @@ tags:
   ```
   - 线
   ```
-  lineTp(x,y)//绘制一条从当前位置到指定x，y的直线（这里的x,y是终点）
+  lineTo(x,y)//绘制一条从当前位置到指定x，y的直线（这里的x,y是终点）,指定线段的终点
   ```
+  - 曲线
+    - `quadraticCurveTo(cpx,cpy,x,y)`,二次贝赛尔曲线路径的方法，接受两个点为参数，第一个点是控制点，第二个是终点，起点在就是当前moveTo的点，这样可以画一个基于起点到终点，受控于控制点的一个曲线，通俗一点的理解就是控制点就像一只手把一条线拽起来一样，注意，并不是把一条直线拽起来，如果是拽直线，那就成折线了，而不是曲线。并且曲线永远不会触碰到控制点，而会在中途偏离控制点。
+    - `bezierCurveTo(cp1x,cp1y,cp2x,cp2y,x,y)`
+    - `arcTo(cp1x,cp1y,cp2x,cp2y,radius)`
   - 圆弧
   ```
   arc(x,y,radius,startAngle,endAngle,anticlockwise)//画一个以(x,y)为圆心，radius为半径，从startAngle开始到endAngle结束，按照anticlockwise给定的方向(默认为顺时针)来生成，需要注意的是startAngle和endAngle的单位是弧度，不是度数，角度与弧度的js表达式：radians=(Math.PI/180)*degress.
   ```
   - 色彩
-  `fillStyle = color`设置图形的填充颜色，`strokeStyle = color`设置图形轮廓的颜色
+  `fillStyle = color`设置图形的填充颜色，`strokeStyle = color`设置线条的颜色
   
   - 透明度 `globalAlpha = transparencyValue`,取值范围0-1
   ```
@@ -63,8 +67,8 @@ tags:
   ```
   lineWidth //设置线条宽度，默认为1.0
   lineCap   //设置线条末端样式？什么鬼，其实就是线条的帽子，值有butt/round/square,默认值为butt
-  lineJoin  //设置线条与线条之间接合处的样式，值有round/bevel/miter,默认是miter
-  miterLimit//限制两条线相交时交接处最大长度？不懂
+  lineJoin  //设置线条与线条之间相交处的样式，值有round/bevel/miter,默认是miter
+  miterLimit//当lineJoin属性设置为miter的时候，该属性可用于控制两条相交线外侧交点与内侧交点的距离，必须是一个大于零的有限的数字，默认值为10.
   getLineDash()//返回一个包含当前虚线样式，长度为非负偶数的数组
   setLineDash()//设置当前虚线样式
   lineDashOffset//设置虚线样式的起始偏移量
@@ -168,6 +172,7 @@ tags:
   ```
   
   - 切片
+  
   > 也就是裁剪图片,有点意思
   
   ```
@@ -178,11 +183,14 @@ tags:
   - 控制图像的缩放行为
   `cx.mozImageSmoothingEnabled = false //火狐`
 * 变形
+
+> 变形操作都是在对一个图像设置好属性之后、绘制之前用的
+
   - 状态的保存和恢复
   `save()`, 用来保存canvas状态，canvas状态保存在一个栈中，保存一次，当前的状态就入栈，返回上一步的操作，就是`restore()`，恢复状态
   - 移动（translating）
   ```
-  translate(x,y)//x是左右偏移量，y是上下偏移量，变形前保存状态是个很好的习惯
+  translate(offsetx,offsety)//offsetx是左右偏移量，offsety是上下偏移量，变形前保存状态是个很好的习惯
   ```
   
   - 旋转（rotating）
@@ -200,13 +208,67 @@ tags:
   transform(m11,m12,m21,m22,dx,dy)//目前没懂
   ```
   
+> 移动、旋转、缩放，是叠加的，比如之前已经translate(100,100),左右上下偏移一百，此时位置为a点，如果后面没有移回来，又用了translat(200,200),那么是在a的基础上继续偏移，所以这个时候restore 的作用就来了，恢复状态，恢复在save时候的状态
+  
 * 动画
+
+> 所谓动画，就是不停的重绘，达到一种动的视觉效果
+
   - 基本步骤
   	1. 清空canvas
   	2. 保存canvas状态
   	3. 绘制动画图形
   	4. 恢复canvas状态，然后重绘下一帧
-  - 操控动画
+  - `window.requestAnimationFrame(callback)`
+    > 用来在页面重绘之前，通知浏览器调用一个指定的函数，如果想要得到连贯的逐帧动画，函数中必须要重新调用,用法：
+    ```
+    function callback(){
+    	window.requestAnimationFrame(callback);// 放在第一行
+    	//函数体
+    } 
+    ```
+  - 动画中的公式
+    - 三角学基础函数
+      1. sine of angle = opposite/hypotenuse
+      2. cosine of angle = adjacent/hypotenuse
+      3. tangent of angle = opposite/adjacent
+    - 角度与弧度互转
+      1. radians = degrees * Math.PI / 180
+      2. degrees = radians * 180 / Math.PI
+    -  创建波
+    ```
+    (function drawFrame(){
+      	window.requestAnimationFrame(drawFrame);
+      	angle += speed;
+      }())
+    ```
+    
+    - 创建圆形
+    ```
+    (function drawFrame(){
+    	window.requestAnimationFrame(drawFrame);
+    	xposition = centerX + Math.cos(angle)*radius;
+    	yposition = centerY + Math.sin(angle)*radius;
+    	angle += speed;
+    }())
+    ```
+    
+    - 创建椭圆形
+    ```
+    (function drawFrame(){
+    	window.requestAnimationFrame(drawFrame);
+    	xposition = centerX + Math.cos(angle)*xradius;
+    	yposition = centerY + Math.sin(angle)*yradius;
+    	angle += speed;
+    }())
+    ```
+    
+    - 获取两点间的距离
+    ```
+    dx = x2 - x1;
+    dy = y2 - y1;
+    distance = Math.sqrt(dx*dx + dy*dy)
+    ```
 * 保存文件
   - `canvas.toDataURL(type,encoderOptions)`,type是图片格式(可选)，默认image/png,encoderOptions是图片质量(可选)，默认范围为0-1，默认值0.92
 * 小结
@@ -221,5 +283,8 @@ tags:
     3. strokeRect(x, y, width, height)，绘制一个有边框的矩形
 * TIPS
   - 一个有填充色并且描边的图像，应该先填充后描边（先fill后stroke），如果反过来的话，边的一半会被填充色覆盖掉
+  - 所谓速度、加速度的问题：
+  
+  > 物理上v = at，x=v*t; 在canvas上没有时间的概念，因为是逐帧渲染的，可以想象成一帧就是1s，但是时间有递加的概念，而帧并没有，所以对应过来如果想要取得有“加速度的效果”，那么x += a,也就是叠加一个加速度的值，这样就像有了加速度一样；如果对应过来想要取得有“速度”的效果，那么就是x += v,也就是位置叠加一个速度,这样就像有了速度一样
   
   

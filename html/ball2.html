@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>正弦运动(波的运用)</title>
+</head>
+<body>
+<canvas id="canvas" width="800" height="800" style="border: 1px solid #aaff88; "></canvas>
+
+</body>
+<script src="../js/ball.js"></script>
+<script>
+    window.onload = function () {
+        var canvas = document.getElementById("canvas");
+        var context = canvas.getContext("2d");
+
+        var ball = new Ball(),
+                angle = 0,
+                centerY = 200,
+                xspeed = 1,
+                yspeed = 0.05;
+
+
+        ball.x = 0;
+
+        (function drawFrame(){
+            window.requestAnimationFrame(drawFrame);
+            //清空画布
+            context.clearRect(0,0, canvas.width, canvas.height);
+            //重新设置属性
+            ball.x += xspeed;
+            ball.y = centerY/2 + Math.sin(angle)*50;//控制垂直方向上的位移
+            angle += yspeed;//'控制速度'
+            //绘图
+            ball.draw(context)
+        }());
+    }
+</script>
+</html>

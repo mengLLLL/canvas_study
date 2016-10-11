@@ -9,7 +9,7 @@ function Arrow(){
   this.color = "#ffee00";
   this.rotation = 0
 }
-
+//画一个箭头,首先要确定他的位置和旋转角度,然后绘制,并且在最后要恢复初始状态
 Arrow.prototype.draw = function (cxt) {
   cxt.save();
   //移动x,y的位置

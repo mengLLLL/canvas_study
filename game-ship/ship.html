@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ship</title>
+</head>
+<body>
+<canvas id="canvas" width="400" height="400">
+    思路整理:
+        1.假如一开始按了左右箭头
+        2.左右箭头使飞船旋转一个角度,注意这个角度是叠加的
+        3.根据角度算出ax,ay--两个轴上面的加速度(如果没有按上箭头,那么也就是静止
+        4.按下上箭头使飞船开始前进,真正的位移
+</canvas>
+</body>
+<script src="../js/utils.js"></script>
+<script src="./js/ship.js"></script>
+<script>
+    window.onload = function () {
+        var canvas = document.getElementById("canvas");
+        var context = canvas.getContext("2d");
+        var ship = new Ship();
+        var vr = 0,vx = 0, vy = 0, thrust = 0;
+        /*
+        vr     ---旋转速度向量,即控制飞船转向它时的旋转速度
+        thrust ---推力的大小
+         */
+        ship.x = canvas.width/3;
+        ship.y = canvas.height/3;
+        window.addEventListener('keydown', function (e) {
+            switch (e.keyCode){
+                case 37:
+                    vr = -3;
+                    break;
+                case 39:
+                    vr = 3;
+                    break;
+                case 38:
+                    thrust = 0.05;
+                    ship.showFlame = true;
+                    break;
+            }
+        },false);
+        window.addEventListener('keyup', function (e) {
+            vr = 0;
+            thrust = 0;
+            ship.showFlame = false
+        },false);
+
+        (function drawFrame() {
+            window.requestAnimationFrame(drawFrame)
+            context.clearRect(0,0, canvas.width, canvas.height);
+            ship.rotation += vr * Math.PI/180;
+            var angle = ship.rotation;
+            var ax = Math.cos(angle)*thrust;
+            var ay = Math.sin(angle)*thrust;
+            var left = 0;
+            var right = canvas.width;
+            var top = 0;
+            var bottom = canvas.height;
+            vx += ax;
+            vy += ay;
+            ship.x += vx;
+            ship.y += vy;
+
+            if(ship.x - ship.width/2 > right){
+                ship.x = left - ship.width/2;
+            }else if(ship.x + ship.width/2 < left){
+                ship.x = right + ship.width/2;
+            }
+            if(ship.y - ship.height/2 > bottom){
+                ship.y = top - ship.height/2;
+            }else if(ship.y < top - ship.height/2){
+                ship.y = bottom + ship.height/2;
+            }
+
+            ship.draw(context)
+        }())
+    }
+</script>
+</html>

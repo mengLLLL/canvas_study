@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>平滑的上下运动(波的运用)</title>
+</head>
+<body>
+<canvas id="canvas" width="800" height="800" style="border: 1px solid #aaff88; "></canvas>
+
+</body>
+<script src="../js/ball.js"></script>
+<script>
+    window.onload = function () {
+        var canvas = document.getElementById("canvas");
+        var context = canvas.getContext("2d");
+
+        var ball = new Ball();
+        var angle = 0;
+
+        ball.x = canvas.width/2;
+        ball.y = canvas.height/2;
+
+        (function drawFrame(){
+            window.requestAnimationFrame(drawFrame);
+            //清空画布
+            context.clearRect(0,0, canvas.width, canvas.height);
+            //重新设置属性
+            ball.y = canvas.height/2 + Math.sin(angle)*50;//控制垂直方向上的位移
+            angle += 0.1;//0.1 =>'控制速度'
+            //绘图
+            ball.draw(context)
+        }());
+    }
+</script>
+</html>

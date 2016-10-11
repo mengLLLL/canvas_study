@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>圆周运动</title>
+</head>
+<body>
+<canvas id="canvas" width="800" height="800" style="border: 1px solid #aaff88; ">
+    正弦和余弦结合,可以产生做圆周运动的效果,x轴上做正弦运动,y轴上做余弦运动
+</canvas>
+
+</body>
+<script src="../js/ball.js"></script>
+<script>
+    window.onload = function () {
+        var canvas = document.getElementById("canvas");
+        var context = canvas.getContext("2d");
+
+        var ball = new Ball(),
+                angle = 0,
+                centerX = canvas.width/2,
+                centerY = canvas.height/ 2,
+                radius = 50,
+                speed = 0.05;
+
+        (function drawFrame(){
+            window.requestAnimationFrame(drawFrame);
+            //清空画布
+            context.clearRect(0,0, canvas.width, canvas.height);
+            //重新设置属性
+            ball.x = centerX + Math.sin(angle)*radius;
+            ball.y = centerY + Math.cos(angle)*radius;
+            angle += speed;//'控制速度'
+            //绘图
+            ball.draw(context)
+        }());
+    }
+</script>
+</html>

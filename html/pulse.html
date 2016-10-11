@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>脉冲效果</title>
+</head>
+<body>
+<canvas id="canvas" width="800" height="800" style="border: 1px solid #aaff88; ">
+    效果就是小球变大然后变小,变得过程是很平稳的,不是突变
+</canvas>
+
+</body>
+<script src="../js/ball.js"></script>
+<script>
+    window.onload = function () {
+        var canvas = document.getElementById("canvas");
+        var context = canvas.getContext("2d");
+
+        var ball = new Ball(),
+                angle = 0,
+                centerScale = 1,
+                range = 0.5,
+                speed = 0.05;
+
+
+        ball.x = canvas.width/2;
+        ball.y = canvas.height/2;
+
+        (function drawFrame(){
+            window.requestAnimationFrame(drawFrame);
+            //清空画布
+            context.clearRect(0,0, canvas.width, canvas.height);
+            //重新设置属性
+            ball.scaleX = ball.scaleY = centerScale + Math.sin(angle) * range;
+            angle += speed;//'控制速度'
+            //绘图
+            ball.draw(context)
+        }());
+    }
+</script>
+</html>
