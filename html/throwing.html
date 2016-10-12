@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>投掷小球</title>
+</head>
+<body>
+<canvas id="canvas" width="800" height="800" style="border: 1px solid #aaff88; ">
+    投掷的效果:
+        旧的位置+速度向量=新的位置,那么物体被拖拽鼠标释放的时候的速度应该就是:
+        速度向量=新的位置-旧的位置,位置的变换是每一帧都会改变的,所以视觉效果就是鼠标移动的越快就像真是的扔一个球一样,它获得的初始速度就快
+</canvas>
+</body>
+<script src="../js/utils.js"></script>
+<script src="../js/ball.js"></script>
+<script>
+    window.onload = function () {
+        var canvas = document.getElementById('canvas');
+        var context = canvas.getContext("2d");
+        var mouse = untils.captureMouse(canvas);
+        var ball = new Ball();
+        var vx = Math.random()*10 - 5;
+        var vy = -10;
+        var bounce = -0.7;
+        var gravity = 0.2;
+        var isMouseDown = false;
+        var oldX, oldY;
+
+        ball.x = canvas.width/2;
+        ball.y = canvas.height/2;
+
+        canvas.addEventListener('mousedown', function () {
+            if(untils.containsPoint(ball.getBounds(),mouse.x, mouse.y)){
+                isMouseDown = true;
+                oldX = ball.x;
+                oldY = ball.y;
+                canvas.addEventListener('mouseup',onMouseUp, false)
+                canvas.addEventListener('mousemove', onMouseMove, false)
+            }
+        },false);
+        function onMouseUp(){
+            isMouseDown = false;
+            canvas.removeEventListener('mouseup', onMouseUp, false);
+            canvas.removeEventListener('mousemove', onMouseMove, false)
+        }
+
+        function onMouseMove(e){
+            ball.x = mouse.x;
+            ball.y = mouse.y;
+        }
+
+        function trackVelocity(){
+            vx = ball.x - oldX;
+            vy = ball.y - oldY;
+            oldX = ball.x;
+            oldY = ball.y;
+        }
+        function checkBoundaries() {
+            var left = 0,right = canvas.width,top = 0, bottom = canvas.height;
+            vy += gravity;
+            ball.x += vx;
+            ball.y += vy;
+            if(ball.x + ball.radius >right){
+                ball.x = right - ball.radius;
+                vx *= bounce;
+            }else if(ball.x - ball.radius < left){
+                ball.x = left + ball.radius;
+                vx *= bounce
+            }
+            if(ball.y + ball.radius > bottom){
+                ball.y = bottom - ball.radius;
+                vy *= bounce;
+            }else if(ball.y - ball.radius < top){
+                ball.y = top + ball.radius;
+                vy *= bounce;
+            }
+        }
+        (function drawFrame() {
+            window.requestAnimationFrame(drawFrame);
+            context.clearRect(0,0, canvas.width, canvas.height);
+            //鼠标释放之后计算速度
+            if(isMouseDown){
+                trackVelocity()
+            }else {
+                checkBoundaries()//鼠标按下的时候检查边界并且运动小球
+
+            }
+            ball.draw(context)
+        }())
+    }
+</script>
+</html>

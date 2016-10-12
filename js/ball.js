@@ -16,6 +16,8 @@ function Ball(radius,color){
   this.scaleY = 1;
   this.color = color;
   this.lineWidth = 1
+  this.vx = 0;
+  this.vy = 0;
 }
 
 Ball.prototype.draw = function (cxt) {
@@ -33,4 +35,13 @@ Ball.prototype.draw = function (cxt) {
     cxt.stroke()
   }
   cxt.restore();
+}
+
+Ball.prototype.getBounds = function () {
+  return{
+    x:this.x - this.radius,
+    y:this.y - this.radius,
+    width:this.radius * 2,
+    height:this.radius * 2
+  }
 }

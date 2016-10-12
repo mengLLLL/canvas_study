@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>摩擦力的应用</title>
+</head>
+<body>
+<canvas id="canvas" width="400" height="400" style="border: 1px solid #aaff88; ">
+    慢慢停止的效果
+    关于摩擦力为什么要作用在角速度上(比较精确的方法):
+        可以想象成摩擦力作用在角速度上,角速度减去摩擦力,再算出vx,vy;把摩擦力分解成垂直方向和水平方向也可以,那样会稍微麻烦一点
+    (比较粗糙的方法):
+        也就是直接给vx,vy乘一个小于1的系数-_-
+</canvas>
+
+</body>
+<script src="../js/ball.js"></script>
+<script>
+    window.onload = function () {
+        var canvas = document.getElementById("canvas");
+        var context = canvas.getContext("2d");
+
+        var ball = new Ball();
+        var vx = Math.random()*10 - 5;
+        var vy = Math.random()*10 - 5;
+
+        var friction = 0.1;
+
+        ball.x = canvas.width/2;
+        ball.y = canvas.height/2;
+
+        (function drawFrame(){
+            window.requestAnimationFrame(drawFrame);
+            //清空画布
+            context.clearRect(0,0, canvas.width, canvas.height);
+            //重新设置属性
+            var speed = Math.sqrt(vx*vx + vy*vy);//角速度
+            var angle = Math.atan2(vy,vx);
+            if(speed > friction){
+                speed -= friction;
+            }else {
+                speed = 0
+            }
+            //重新计算速度
+            vx = Math.cos(angle)*speed;
+            vy = Math.sin(angle)*speed;
+            ball.x += vx;
+            ball.y += vy;
+            //绘图
+            ball.draw(context)
+        }());
+    }
+</script>
+</html>

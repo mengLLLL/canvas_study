@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>摩擦力的应用</title>
+</head>
+<body>
+<canvas id="canvas" width="400" height="400" style="border: 1px solid #aaff88; "></canvas>
+
+</body>
+<script src="../js/ball.js"></script>
+<script>
+    window.onload = function () {
+        var canvas = document.getElementById("canvas");
+        var context = canvas.getContext("2d");
+
+        var ball = new Ball();
+        var vx = Math.random()*10 - 5;
+        var vy = Math.random()*10 - 5;
+
+        var bounce = -0.7;//碰撞系数,数值的改变效果也会不一样,如果是-1,那么速度不会,方向相反,如果是-0.*,方向相反,速度减小
+
+        ball.x = canvas.width/2;
+        ball.y = canvas.height/2;
+
+        (function drawFrame(){
+            window.requestAnimationFrame(drawFrame);
+            //清空画布
+            context.clearRect(0,0, canvas.width, canvas.height);
+            //重新设置属性
+            var left = 0,right = canvas.width,top = 0, bottom = canvas.height;
+            ball.x += vx;
+            ball.y += vy;
+            //边界检测,碰到之后速度要乘-1,并且将物体的位置置为边界
+            if(ball.x + ball.radius > right){
+                ball.x = right - ball.radius;
+                vx *= bounce;
+            }else if(ball.x - ball.radius < left){
+                ball.x = left + ball.radius;
+                vx *= bounce;
+            }
+            if(ball.y + ball.radius > bottom){
+                ball.y = bottom - ball.radius;
+                vy *= bounce;
+            }else if(ball.y - ball.radius < top){
+                ball.y = top + ball.radius;
+                vy *= bounce;
+            }
+            //绘图
+            ball.draw(context)
+        }());
+    }
+</script>
+</html>

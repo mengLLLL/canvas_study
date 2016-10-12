@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>鼠标事件</title>
+</head>
+<body>
+<canvas id="canvas" width="800" height="800" style="border: 1px solid #aaff88; ">
+</canvas>
+<textarea name="log" id="log" cols="30" rows="10"></textarea>
+</body>
+<script src="../js/utils.js"></script>
+<script src="../js/arrow.js"></script>
+<script src="../js/ball.js"></script>
+<script>
+    window.onload = function () {
+        var canvas = document.getElementById('canvas');
+        var context = canvas.getContext("2d");
+        var mouse = untils.captureMouse(canvas);
+        var log = document.getElementById("log");
+        var ball = new Ball();
+
+        ball.x = canvas.width/2;
+        ball.y = canvas.height/2;
+        ball.draw(context);
+
+        canvas.addEventListener('mousedown', function () {
+            if(untils.containsPoint(ball.getBounds(),mouse.x, mouse.y)){
+                log.value = "in ball : mousedown";
+            }else {
+                log.value = "canvas : mousedown"
+            }
+        },false);
+        canvas.addEventListener('mouseup', function () {
+            if(untils.containsPoint(ball.getBounds(),mouse.x, mouse.y)){
+                log.value = "in ball : mouseup"
+            }else {
+                log.value = "canvas : mouseup"
+            }
+        },false);
+        canvas.addEventListener("mousemove", function () {
+            if(untils.containsPoint(ball.getBounds(),mouse.x, mouse.y)){
+                log.value = "in ball : mousemove"
+            }else {
+                log.value = "canvas : mousemove"
+            }
+        },false);
+    }
+</script>
+</html>

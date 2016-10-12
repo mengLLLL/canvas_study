@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>缓动到鼠标的位置</title>
+</head>
+<body>
+<canvas id="canvas" width="800" height="800" style="border: 1px solid #aaff88; ">
+    将鼠标的位置作为目标点
+</canvas>
+</body>
+<script src="../js/utils.js"></script>
+<script src="../js/ball.js"></script>
+<script>
+    window.onload = function () {
+        var canvas = document.getElementById("canvas");
+        var context = canvas.getContext("2d");
+        var ball = new Ball();
+        var easing = 0.05;
+        var mouse = untils.captureMouse(canvas);
+
+        (function drawFrame() {
+            window.requestAnimationFrame(drawFrame);
+            context.clearRect(0,0, canvas.width, canvas.height);
+
+            var vx = (mouse.x - ball.x) * easing;
+            var vy = (mouse.y - ball.y) * easing;
+            ball.x += vx;
+            ball.y += vy;
+
+            ball.draw(context)
+        }())
+    }
+</script>
+</html>

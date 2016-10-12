@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>缓动</title>
+</head>
+<body>
+<canvas id="canvas" width="800" height="800" style="border: 1px solid #aaff88; ">
+    效果:从(0,0)点减速移动到(targetX,targetY)
+    缓动就是距离目标点越近速度越慢,所以缓动是靠不断的改变速度来实现,而速度又是通过距离来改变的
+</canvas>
+
+</body>
+<script src="../js/ball.js"></script>
+<script>
+    /*
+    这段代码问题在于虽然视觉上小球停止了运动,但是后台还是一直在做运算,浪费系统资源
+     window.onload = function () {
+     var canvas = document.getElementById("canvas");
+     var context = canvas.getContext("2d");
+     var ball = new Ball();
+     var easing = 0.05;
+     var targetX = canvas.width/ 2,targetY = canvas.height/2;
+     (function drawFrame() {
+     window.requestAnimationFrame(drawFrame);
+     context.clearRect(0,0, canvas.width, canvas.height);
+     //最关键的地方
+     var vx = (targetX - ball.x) * easing;
+     var vy = (targetY - ball.y) * easing;
+
+     ball.x += vx;
+     ball.y += vy;
+     ball.draw(context)
+     }())
+     }
+     */
+    //改进后
+    window.onload = function () {
+        var canvas = document.getElementById("canvas");
+        var context = canvas.getContext("2d");
+        var ball = new Ball();
+        var easing = 0.05;
+        var targetX = canvas.width/ 2,animRequest;
+        ball.y = canvas.height/2;
+
+        (function drawFrame() {
+            animRequest = window.requestAnimationFrame(drawFrame);
+            context.clearRect(0,0, canvas.width, canvas.height);
+
+            var dx = targetX - ball.x;
+
+            if(Math.abs(dx) < 1){
+                ball.x = targetX;
+                window.cancelAnimationFrame(animRequest);
+                console.log("animation is done!")
+            }else {
+                var vx = dx * easing;
+                ball.x += vx;
+            }
+
+            ball.draw(context)
+        }())
+    }
+</script>
+</html>

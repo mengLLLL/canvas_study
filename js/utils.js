@@ -24,3 +24,13 @@ untils.captureMouse = function(element){
   },false);
   return mouse;
 }
+/**
+ *
+ * @param rect 一个对象,比如ball的getBounds方法返回值
+ * @param x
+ * @param y
+ * @returns {boolean} (x,y)这个点是否位于矩形的边界内
+ */
+untils.containsPoint = function (rect, x, y) {
+  return !(x < rect.x || x > rect.x + rect.width || y < rect.y || y > rect.y + rect.height)
+}

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>弹动</title>
+</head>
+<body>
+<canvas id="canvas" width="800" height="800" style="border: 1px solid #aaff88; ">
+    弹动的效果:
+        距离目标点越近,弹动的速度越来越慢,速度越来越慢肯定是加速度引起的,加速度是由目标点与小球的距离来计算的
+</canvas>
+</body>
+<script src="../js/ball.js"></script>
+<script>
+    window.onload = function () {
+        var canvas = document.getElementById("canvas");
+        var context = canvas.getContext("2d");
+        var ball = new Ball();
+        var spring = 0.01;//弹动系数
+        var targetX = canvas.width/2;
+        var vx = 0;
+        var friction = 0.95;//摩擦力,如果没有摩擦,就会一直运动下去,不会停止
+        var animRequest;
+
+        ball.y = canvas.height/2;
+
+        (function drawFrame() {
+            animRequest = window.requestAnimationFrame(drawFrame);
+            context.clearRect(0,0, canvas.width, canvas.height);
+
+            var dx = targetX - ball.x;
+            var ax = dx * spring;
+
+                vx += ax;
+                vx *= friction;
+                ball.x += vx;
+            ball.draw(context)
+
+        }())
+    }
+</script>
+</html>

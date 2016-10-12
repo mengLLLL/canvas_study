@@ -5,7 +5,7 @@
     <title>ship</title>
 </head>
 <body>
-<canvas id="canvas" width="400" height="400">
+<canvas id="canvas" width="800" height="800" style="border: 1px solid #aaff88; ">
     思路整理:
         1.假如一开始按了左右箭头
         2.左右箭头使飞船旋转一个角度,注意这个角度是叠加的
@@ -21,6 +21,7 @@
         var context = canvas.getContext("2d");
         var ship = new Ship();
         var vr = 0,vx = 0, vy = 0, thrust = 0;
+        var friction = 0.97;
         /*
         vr     ---旋转速度向量,即控制飞船转向它时的旋转速度
         thrust ---推力的大小
@@ -60,6 +61,9 @@
             var bottom = canvas.height;
             vx += ax;
             vy += ay;
+            //加上阻力更加真实
+            vx *= friction;
+            vy *= friction;
             ship.x += vx;
             ship.y += vy;
 
