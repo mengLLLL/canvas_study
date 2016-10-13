@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>基于距离的碰撞检测--两个圆</title>
+</head>
+<body>
+<canvas id="canvas" width="800" height="800" style="border: 1px solid #aaff88; "></canvas>
+
+</body>
+<script src="../js/utils.js"></script>
+<script src="../js/ball.js"></script>
+<script>
+    window.onload = function () {
+        var canvas = document.getElementById("canvas");
+        var context = canvas.getContext("2d");
+
+        var ball = new Ball();
+        var mouse = untils.captureMouse(canvas);
+        var ballA = new Ball(30);
+        var ballB = new Ball(30);
+
+        ballA.x = canvas.width/2;
+        ballA.y = canvas.height/2;
+        canvas.addEventListener('mousemove',drawFrame,false)
+
+        function drawFrame(){
+            context.clearRect(0, 0, canvas.width, canvas.height);
+            ballB.x = mouse.x;
+            ballB.y = mouse.y;
+
+            var dx = ballB.x - ballA.x;
+            var dy = ballB.y - ballA.y;
+            var dist = Math.sqrt(dx * dx, dy * dy);
+
+            if(dist < 60){
+                console.log("Hit")
+            }else {
+                console.log("Not Hit")
+            }
+            ballA.draw(context);
+            ballB.draw(context)
+        }
+    }
+</script>
+</html>

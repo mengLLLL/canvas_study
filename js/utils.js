@@ -3,6 +3,8 @@
  */
 var untils = {};
 //捕捉鼠标位置
+
+//一失手成千古恨,工具应该是utils,拼写错了,但是很多文件都用到了,就不改了
 untils.captureMouse = function(element){
   var mouse = {
     x:0,
@@ -33,4 +35,16 @@ untils.captureMouse = function(element){
  */
 untils.containsPoint = function (rect, x, y) {
   return !(x < rect.x || x > rect.x + rect.width || y < rect.y || y > rect.y + rect.height)
+}
+/**
+ *
+ * @param rectA
+ * @param rectB
+ * @returns {boolean} 两个矩形相交返回true
+ */
+untils.intersectx = function (rectA, rectB) {
+  return !(rectA.x + rectA.width < rectB.x ||
+            rectB.x + rectB.width < rectA.x ||
+            rectA.y + rectA.height < rectB.y ||
+            rectB.y + rectB.height < rectA.y)
 }

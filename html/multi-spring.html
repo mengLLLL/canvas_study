@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>三个球控制一个球</title>
+</head>
+<body>
+<canvas id="canvas" width="800" height="800" style="border: 1px solid #aaff88; ">
+    三个控制点,一个受控小球;
+    每次画图的时候遍历三个控制点,计算位置,改变受控小球的位置
+</canvas>
+</body>
+<script src="../js/ball.js"></script>
+<script src="../js/utils.js"></script>
+<script>
+    window.onload = function () {
+        var canvas = document.getElementById("canvas");
+        var context = canvas.getContext("2d");
+        var mouse = untils.captureMouse(canvas);
+        var spring = 0.01;//弹动系数
+        var ball = new Ball(20);
+        var handles = [];
+        var numHandles = 3;
+        var movingHandle = null;
+        var friction = 0.9;//摩擦力,如果没有摩擦,就会一直运动下去,不会停止
+
+        for(var handle, i = 0; i < numHandles; i++){
+            handle = new Ball(10,"#0ff");
+            handle.x = Math.random()*canvas.width;
+            handle.y = Math.random()*canvas.height;
+            handles.push(handle)
+        }
+
+        canvas.addEventListener('mousedown', function () {
+            handles.forEach(function (handle) {
+                if(untils.containsPoint(handle.getBounds(), mouse.x, mouse.y)){
+                    movingHandle = handle;
+                }
+            })
+        },false);
+        canvas.addEventListener('mouseup', function () {
+            if(movingHandle){
+                movingHandle = null;
+            }
+        },false);
+        canvas.addEventListener('mousemove', function () {
+            if(movingHandle){
+                movingHandle.x = mouse.x;
+                movingHandle.y = mouse.y;
+            }
+        },false);
+        //小球向控制点运动
+        function applyHandle ( handle) {
+            var dx = handle.x - ball.x;
+            var dy = handle.y - ball.y;
+            ball.vx += dx * spring;
+            ball.vy += dy * spring
+        }
+        //小球与控制点之间连线
+        function drawHandle(handle) {
+            context.moveTo(ball.x, ball.y);
+            context.lineTo(handle.x, handle.y);
+            context.stroke();
+            handle.draw(context)
+        }
+
+        (function drawFrame() {
+            window.requestAnimationFrame(drawFrame);
+            context.clearRect(0,0, canvas.width, canvas.height);
+            handles.forEach(applyHandle);
+            ball.vx *= friction;
+            ball.vy *= friction;
+            ball.x += ball.vx;
+            ball.y += ball.vy;
+
+            context.beginPath();
+            handles.forEach(drawHandle);
+            ball.draw(context)
+
+        }())
+    }
+</script>
+</html>
